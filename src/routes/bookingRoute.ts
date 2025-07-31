@@ -15,6 +15,11 @@ import {
   deleteCustomerBooking,
   updateCustomerBooking,
 } from "../controllers/bookingController";
+import {
+  upload,
+  uploadReceipt,
+  downloadReceipt,
+} from "../controllers/uploadController";
 
 const router = Router();
 //customer booking routes
@@ -23,6 +28,15 @@ router.get("/get-bookings", verifyToken, getBookings);
 router.get("/:bookingId/details", verifyToken, getBookingDetailsbyId);
 router.delete("/customer/:bookingId", verifyToken, deleteCustomerBooking);
 router.put("/customer/:bookingId", verifyToken, updateCustomerBooking);
+
+// Receipt upload routes
+router.post(
+  "/:bookingId/upload-receipt",
+  verifyToken,
+  upload.single("receipt"),
+  uploadReceipt
+);
+router.get("/:bookingId/download-receipt", verifyToken, downloadReceipt);
 
 //Admin booking routes
 router.get(

@@ -158,6 +158,7 @@ export const getEmployees = async (
         role: {
           in: ["EMPLOYEE"],
         },
+        status: "ACTIVE", // Only fetch active employees
       },
       select: {
         id: true,

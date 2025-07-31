@@ -44,6 +44,13 @@ export const login = async (req: Request, res: Response): Promise<any> => {
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
+
+  if (user.status === "INACTIVE") {
+    return res
+      .status(403)
+      .json({ error: "Account is inactive. Please contact support." });
+  }
+
   const token = generateToken({ id: user.id, role: user.role });
   res.cookie("token", token, {
     httpOnly: true,
@@ -74,13 +81,6 @@ const otpStorage = new Map();
 
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
-};
-
-const generateOtpToken = (email: string, otp: string): string => {
-  if (!JWT_SECRET) {
-    throw new Error("JWT_SECRET is not defined");
-  }
-  return jwt.sign({ email, otp }, JWT_SECRET, { expiresIn: "10m" });
 };
 
 export const forgotPassword = async (
